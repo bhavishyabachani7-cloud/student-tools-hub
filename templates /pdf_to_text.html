@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF to Text Converter</title>
+<meta name="description" content="Extract text from PDF files instantly.">
+
+</head>
+
+<body style="background:#0f2027;color:white;padding:20px;">
+
+<h1>PDF to Text</h1>
+
+<form method="post" action="/pdf_to_text" enctype="multipart/form-data">
+<input type="file" name="pdf">
+<button>Extract</button>
+</form>
+
+<p>{{pdf_text}}</p>
+
+</body>
+</html>
