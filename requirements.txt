@@ -1,4 +1,5 @@
 flask
 pillow
-PyPDF2
 fpdf
+PyPDF2
+gunicorn
