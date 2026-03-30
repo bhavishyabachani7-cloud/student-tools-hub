@@ -7,47 +7,54 @@ import PyPDF2
 
 app = Flask(__name__)
 
-# ---------- HOME ----------
-@app.route('/')
+# ---------- HOME (HEAD SAFE) ----------
+@app.route('/', methods=['GET', 'HEAD'])
 def home():
     return render_template('index.html', tool="bmi", result=None)
 
 # ---------- PAGES ----------
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return "<h1>About</h1>"
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return "<h1>Contact</h1>"
 
 @app.route('/privacy')
 def privacy():
-    return render_template('privacy.html')
+    return "<h1>Privacy</h1>"
 
 @app.route('/terms')
 def terms():
-    return render_template('terms.html')
+    return "<h1>Terms</h1>"
 
 # ---------- BMI ----------
 @app.route('/bmi', methods=['POST'])
 def bmi():
-    weight = float(request.form.get('weight', 0))
-    height = float(request.form.get('height', 0))
-    if height == 0:
-        result = "Invalid height"
-    else:
-        bmi = weight / ((height/100)**2)
-        result = f"BMI: {bmi:.2f}"
+    try:
+        weight = float(request.form.get('weight', 0))
+        height = float(request.form.get('height', 0))
+        if height == 0:
+            result = "Invalid height"
+        else:
+            bmi = weight / ((height/100)**2)
+            result = f"BMI: {bmi:.2f}"
+    except:
+        result = "Error in input"
     return render_template('index.html', tool="bmi", result=result)
 
 # ---------- DISCOUNT ----------
 @app.route('/discount', methods=['POST'])
 def discount():
-    price = float(request.form.get('price', 0))
-    disc = float(request.form.get('discount', 0))
-    final = price - (price * disc/100)
-    return render_template('index.html', tool="discount", result=f"Final Price: ₹{final:.2f}")
+    try:
+        price = float(request.form.get('price', 0))
+        disc = float(request.form.get('discount', 0))
+        final = price - (price * disc/100)
+        result = f"Final Price: ₹{final:.2f}"
+    except:
+        result = "Error in input"
+    return render_template('index.html', tool="discount", result=result)
 
 # ---------- WORD COUNT ----------
 @app.route('/wordcount', methods=['POST'])
@@ -81,15 +88,12 @@ def imgcompress():
 # ---------- IMAGE TO PDF ----------
 @app.route('/imgtopdf', methods=['POST'])
 def imgtopdf():
-    img = Image.open(request.files['image'])
-    img = img.convert('RGB')
-
-    pdf = FPDF()
-    pdf.add_page()
-
+    img = Image.open(request.files['image']).convert('RGB')
     temp_path = "temp.jpg"
     img.save(temp_path)
 
+    pdf = FPDF()
+    pdf.add_page()
     pdf.image(temp_path, x=10, y=10, w=190)
 
     buf = io.BytesIO()
@@ -108,7 +112,7 @@ def pdftotext():
         text += page.extract_text() or ""
     return render_template('index.html', tool="pdftotext", result=text)
 
-# ---------- NOTES FORMATTER ----------
+# ---------- NOTES ----------
 @app.route('/notes', methods=['POST'])
 def notes():
     content = request.form.get('content', "")
@@ -151,5 +155,4 @@ def resume():
 
 # ---------- RUN ----------
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
     app.run(debug=True)
