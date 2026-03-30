@@ -1,67 +1,69 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, Response
 from PIL import Image
 from fpdf import FPDF
 import io
 import os
 import PyPDF2
+import logging
 
 app = Flask(__name__)
 
-# ---------- HOME (HEAD SAFE) ----------
+# 🔇 Remove console spam (optional)
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+# ---------- HOME (HEAD FIXED) ----------
 @app.route('/', methods=['GET', 'HEAD'])
 def home():
+    if request.method == 'HEAD':
+        return Response(status=200)   # ✅ FIX
+
     return render_template('index.html', tool="bmi", result=None)
 
 # ---------- PAGES ----------
 @app.route('/about')
 def about():
-    return "<h1>About</h1>"
+    return "<h1>About Page</h1>"
 
 @app.route('/contact')
 def contact():
-    return "<h1>Contact</h1>"
+    return "<h1>Contact Page</h1>"
 
 @app.route('/privacy')
 def privacy():
-    return "<h1>Privacy</h1>"
+    return "<h1>Privacy Policy</h1>"
 
 @app.route('/terms')
 def terms():
-    return "<h1>Terms</h1>"
+    return "<h1>Terms & Conditions</h1>"
 
 # ---------- BMI ----------
 @app.route('/bmi', methods=['POST'])
 def bmi():
     try:
-        weight = float(request.form.get('weight', 0))
-        height = float(request.form.get('height', 0))
-        if height == 0:
-            result = "Invalid height"
-        else:
-            bmi = weight / ((height/100)**2)
-            result = f"BMI: {bmi:.2f}"
+        w = float(request.form.get('weight', 0))
+        h = float(request.form.get('height', 0))
+        result = f"BMI: {w/((h/100)**2):.2f}" if h != 0 else "Invalid height"
     except:
-        result = "Error in input"
+        result = "Error"
     return render_template('index.html', tool="bmi", result=result)
 
 # ---------- DISCOUNT ----------
 @app.route('/discount', methods=['POST'])
 def discount():
     try:
-        price = float(request.form.get('price', 0))
-        disc = float(request.form.get('discount', 0))
-        final = price - (price * disc/100)
-        result = f"Final Price: ₹{final:.2f}"
+        p = float(request.form.get('price', 0))
+        d = float(request.form.get('discount', 0))
+        result = f"Final Price: ₹{p-(p*d/100):.2f}"
     except:
-        result = "Error in input"
+        result = "Error"
     return render_template('index.html', tool="discount", result=result)
 
 # ---------- WORD COUNT ----------
 @app.route('/wordcount', methods=['POST'])
 def wordcount():
     text = request.form.get('text', "")
-    words = len(text.split())
-    return render_template('index.html', tool="wordcount", result=f"Words: {words}")
+    return render_template('index.html', tool="wordcount", result=f"Words: {len(text.split())}")
 
 # ---------- IMAGE RESIZER ----------
 @app.route('/resizer', methods=['POST'])
@@ -79,9 +81,9 @@ def resizer():
 @app.route('/imgcompress', methods=['POST'])
 def imgcompress():
     img = Image.open(request.files['image'])
-    quality = int(request.form.get('quality', 70))
+    q = int(request.form.get('quality', 70))
     buf = io.BytesIO()
-    img.save(buf, format='JPEG', quality=quality)
+    img.save(buf, format='JPEG', quality=q)
     buf.seek(0)
     return send_file(buf, download_name="compressed.jpg", as_attachment=True)
 
@@ -89,17 +91,16 @@ def imgcompress():
 @app.route('/imgtopdf', methods=['POST'])
 def imgtopdf():
     img = Image.open(request.files['image']).convert('RGB')
-    temp_path = "temp.jpg"
-    img.save(temp_path)
+    temp = "temp.jpg"
+    img.save(temp)
 
     pdf = FPDF()
     pdf.add_page()
-    pdf.image(temp_path, x=10, y=10, w=190)
+    pdf.image(temp, x=10, y=10, w=190)
 
     buf = io.BytesIO()
     pdf.output(buf)
     buf.seek(0)
-
     return send_file(buf, download_name="image.pdf", as_attachment=True)
 
 # ---------- PDF TO TEXT ----------
@@ -107,9 +108,7 @@ def imgtopdf():
 def pdftotext():
     file = request.files['pdf']
     reader = PyPDF2.PdfReader(file)
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text() or ""
+    text = "".join([p.extract_text() or "" for p in reader.pages])
     return render_template('index.html', tool="pdftotext", result=text)
 
 # ---------- NOTES ----------
@@ -117,17 +116,17 @@ def pdftotext():
 def notes():
     content = request.form.get('content', "")
     lines = content.splitlines()
-    formatted = "\n".join([f"{i+1}. {line}" for i, line in enumerate(lines)])
+    formatted = "\n".join([f"{i+1}. {l}" for i, l in enumerate(lines)])
     return render_template('index.html', tool="notes", result=formatted)
 
 # ---------- AI BIO ----------
 @app.route('/aibio', methods=['POST'])
 def aibio():
-    name = request.form.get('name', "")
-    prof = request.form.get('profession', "")
-    hobby = request.form.get('hobbies', "")
-    bio = f"{name} is a passionate {prof} who loves {hobby}."
-    return render_template('index.html', tool="aibio", result=bio)
+    n = request.form.get('name', "")
+    p = request.form.get('profession', "")
+    h = request.form.get('hobbies', "")
+    return render_template('index.html', tool="aibio",
+                           result=f"{n} is a passionate {p} who loves {h}.")
 
 # ---------- RESUME ----------
 @app.route('/resume', methods=['POST'])
