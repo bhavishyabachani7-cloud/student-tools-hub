@@ -2,25 +2,23 @@ from flask import Flask, render_template, request, send_file, Response
 from PIL import Image
 from fpdf import FPDF
 import io
-import os
 import PyPDF2
 import logging
 
 app = Flask(__name__)
 
-# 🔇 Remove console spam (optional)
+# Remove logs noise
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-# ---------- HOME (HEAD FIXED) ----------
+# ---------- HOME ----------
 @app.route('/', methods=['GET', 'HEAD'])
 def home():
     if request.method == 'HEAD':
-        return Response(status=200)   # ✅ FIX
-
+        return Response(status=200)
     return render_template('index.html', tool="bmi", result=None)
 
-# ---------- PAGES ----------
+# ---------- STATIC PAGES ----------
 @app.route('/about')
 def about():
     return "<h1>About Page</h1>"
@@ -63,52 +61,82 @@ def discount():
 @app.route('/wordcount', methods=['POST'])
 def wordcount():
     text = request.form.get('text', "")
-    return render_template('index.html', tool="wordcount", result=f"Words: {len(text.split())}")
+    result = f"Words: {len(text.split())}"
+    return render_template('index.html', tool="wordcount", result=result)
 
 # ---------- IMAGE RESIZER ----------
 @app.route('/resizer', methods=['POST'])
 def resizer():
-    img = Image.open(request.files['image'])
+    file = request.files.get('image')
+    if not file:
+        return "No file uploaded"
+
+    img = Image.open(file)
     w = int(request.form.get('width', 100))
     h = int(request.form.get('height', 100))
+
     img = img.resize((w, h))
     buf = io.BytesIO()
     img.save(buf, format='PNG')
     buf.seek(0)
+
     return send_file(buf, download_name="resized.png", as_attachment=True)
 
 # ---------- IMAGE COMPRESS ----------
 @app.route('/imgcompress', methods=['POST'])
 def imgcompress():
-    img = Image.open(request.files['image'])
+    file = request.files.get('image')
+    if not file:
+        return "No file uploaded"
+
+    img = Image.open(file)
     q = int(request.form.get('quality', 70))
+
     buf = io.BytesIO()
     img.save(buf, format='JPEG', quality=q)
     buf.seek(0)
+
     return send_file(buf, download_name="compressed.jpg", as_attachment=True)
 
 # ---------- IMAGE TO PDF ----------
 @app.route('/imgtopdf', methods=['POST'])
 def imgtopdf():
-    img = Image.open(request.files['image']).convert('RGB')
-    temp = "temp.jpg"
-    img.save(temp)
+    file = request.files.get('image')
+    if not file:
+        return "No file uploaded"
 
+    img = Image.open(file).convert('RGB')
+
+    # Convert image to bytes
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format='JPEG')
+    img_bytes.seek(0)
+
+    # Create PDF
     pdf = FPDF()
     pdf.add_page()
-    pdf.image(temp, x=10, y=10, w=190)
 
-    buf = io.BytesIO()
-    pdf.output(buf)
-    buf.seek(0)
+    # Temporary workaround (FPDF needs file)
+    with open("temp.jpg", "wb") as f:
+        f.write(img_bytes.read())
+
+    pdf.image("temp.jpg", x=10, y=10, w=190)
+
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+    buf = io.BytesIO(pdf_bytes)
+
     return send_file(buf, download_name="image.pdf", as_attachment=True)
 
 # ---------- PDF TO TEXT ----------
 @app.route('/pdftotext', methods=['POST'])
 def pdftotext():
-    file = request.files['pdf']
+    file = request.files.get('pdf')
+    if not file:
+        return "No file uploaded"
+
     reader = PyPDF2.PdfReader(file)
     text = "".join([p.extract_text() or "" for p in reader.pages])
+
     return render_template('index.html', tool="pdftotext", result=text)
 
 # ---------- NOTES ----------
@@ -117,6 +145,7 @@ def notes():
     content = request.form.get('content', "")
     lines = content.splitlines()
     formatted = "\n".join([f"{i+1}. {l}" for i, l in enumerate(lines)])
+
     return render_template('index.html', tool="notes", result=formatted)
 
 # ---------- AI BIO ----------
@@ -125,8 +154,9 @@ def aibio():
     n = request.form.get('name', "")
     p = request.form.get('profession', "")
     h = request.form.get('hobbies', "")
-    return render_template('index.html', tool="aibio",
-                           result=f"{n} is a passionate {p} who loves {h}.")
+
+    result = f"{n} is a passionate {p} who loves {h}."
+    return render_template('index.html', tool="aibio", result=result)
 
 # ---------- RESUME ----------
 @app.route('/resume', methods=['POST'])
@@ -146,9 +176,8 @@ def resume():
     pdf.multi_cell(0, 8, "Experience:\n" + request.form.get('experience', ""))
     pdf.multi_cell(0, 8, "Skills:\n" + request.form.get('skills', ""))
 
-    buf = io.BytesIO()
-    pdf.output(buf)
-    buf.seek(0)
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+    buf = io.BytesIO(pdf_bytes)
 
     return send_file(buf, download_name="resume.pdf", as_attachment=True)
 
