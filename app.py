@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, send_file, Response
-from PIL import Image
 from fpdf import FPDF
 import io
 import PyPDF2
@@ -7,7 +6,7 @@ import logging
 
 app = Flask(__name__)
 
-# Remove logs noise
+# Reduce logs
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
@@ -63,69 +62,6 @@ def wordcount():
     text = request.form.get('text', "")
     result = f"Words: {len(text.split())}"
     return render_template('index.html', tool="wordcount", result=result)
-
-# ---------- IMAGE RESIZER ----------
-@app.route('/resizer', methods=['POST'])
-def resizer():
-    file = request.files.get('image')
-    if not file:
-        return "No file uploaded"
-
-    img = Image.open(file)
-    w = int(request.form.get('width', 100))
-    h = int(request.form.get('height', 100))
-
-    img = img.resize((w, h))
-    buf = io.BytesIO()
-    img.save(buf, format='PNG')
-    buf.seek(0)
-
-    return send_file(buf, download_name="resized.png", as_attachment=True)
-
-# ---------- IMAGE COMPRESS ----------
-@app.route('/imgcompress', methods=['POST'])
-def imgcompress():
-    file = request.files.get('image')
-    if not file:
-        return "No file uploaded"
-
-    img = Image.open(file)
-    q = int(request.form.get('quality', 70))
-
-    buf = io.BytesIO()
-    img.save(buf, format='JPEG', quality=q)
-    buf.seek(0)
-
-    return send_file(buf, download_name="compressed.jpg", as_attachment=True)
-
-# ---------- IMAGE TO PDF ----------
-@app.route('/imgtopdf', methods=['POST'])
-def imgtopdf():
-    file = request.files.get('image')
-    if not file:
-        return "No file uploaded"
-
-    img = Image.open(file).convert('RGB')
-
-    # Convert image to bytes
-    img_bytes = io.BytesIO()
-    img.save(img_bytes, format='JPEG')
-    img_bytes.seek(0)
-
-    # Create PDF
-    pdf = FPDF()
-    pdf.add_page()
-
-    # Temporary workaround (FPDF needs file)
-    with open("temp.jpg", "wb") as f:
-        f.write(img_bytes.read())
-
-    pdf.image("temp.jpg", x=10, y=10, w=190)
-
-    pdf_bytes = pdf.output(dest='S').encode('latin-1')
-    buf = io.BytesIO(pdf_bytes)
-
-    return send_file(buf, download_name="image.pdf", as_attachment=True)
 
 # ---------- PDF TO TEXT ----------
 @app.route('/pdftotext', methods=['POST'])
