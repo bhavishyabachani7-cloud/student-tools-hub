@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Word Counter Tool</title>
+<meta name="description" content="Count words and characters instantly with our free online word counter tool.">
+
+<style>
+body {font-family:sans-serif; padding:20px; background:#0f2027; color:white;}
+textarea,button{width:100%; padding:12px; margin-top:10px;}
+</style>
+</head>
+
+<body>
+
+<h1>Free Word Counter Tool</h1>
+
+<p>This tool helps you count words and characters instantly.</p>
+
+<form method="post" action="/word_count">
+<textarea name="text"></textarea>
+<button>Count</button>
+</form>
+
+<p>{{words}} Words | {{chars}} Characters</p>
+
+</body>
+</html>
