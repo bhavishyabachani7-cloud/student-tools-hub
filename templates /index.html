@@ -37,9 +37,6 @@ body {background:#f5f6fa;}
 <a onclick="show('bmi')">BMI</a>
 <a onclick="show('discount')">Discount</a>
 <a onclick="show('wordcount')">Words</a>
-<a onclick="show('resizer')">Resizer</a>
-<a onclick="show('imgcompress')">Compress</a>
-<a onclick="show('imgtopdf')">Img→PDF</a>
 <a onclick="show('pdftotext')">PDF→Text</a>
 <a onclick="show('notes')">Notes</a>
 <a onclick="show('aibio')">AI Bio</a>
@@ -48,7 +45,6 @@ body {background:#f5f6fa;}
 
 <div class="content">
 
-<!-- BMI -->
 <div id="bmi" class="tool" style="display:block;">
 <form method="POST" action="/bmi">
 <input name="weight" class="form-control mb-2" placeholder="Weight">
@@ -58,7 +54,6 @@ body {background:#f5f6fa;}
 {% if tool=="bmi" and result %}<p>{{result}}</p>{% endif %}
 </div>
 
-<!-- DISCOUNT -->
 <div id="discount" class="tool">
 <form method="POST" action="/discount">
 <input name="price" class="form-control mb-2" placeholder="Price">
@@ -68,7 +63,6 @@ body {background:#f5f6fa;}
 {% if tool=="discount" and result %}<p>{{result}}</p>{% endif %}
 </div>
 
-<!-- WORD -->
 <div id="wordcount" class="tool">
 <form method="POST" action="/wordcount">
 <textarea name="text" class="form-control mb-2"></textarea>
@@ -77,34 +71,6 @@ body {background:#f5f6fa;}
 {% if tool=="wordcount" and result %}<p>{{result}}</p>{% endif %}
 </div>
 
-<!-- RESIZER -->
-<div id="resizer" class="tool">
-<form method="POST" action="/resizer" enctype="multipart/form-data">
-<input type="file" name="image" class="form-control mb-2">
-<input name="width" class="form-control mb-2" placeholder="Width">
-<input name="height" class="form-control mb-2" placeholder="Height">
-<button class="btn btn-primary">Download</button>
-</form>
-</div>
-
-<!-- COMPRESS -->
-<div id="imgcompress" class="tool">
-<form method="POST" action="/imgcompress" enctype="multipart/form-data">
-<input type="file" name="image" class="form-control mb-2">
-<input name="quality" class="form-control mb-2" placeholder="Quality">
-<button class="btn btn-primary">Download</button>
-</form>
-</div>
-
-<!-- IMG TO PDF -->
-<div id="imgtopdf" class="tool">
-<form method="POST" action="/imgtopdf" enctype="multipart/form-data">
-<input type="file" name="image" class="form-control mb-2">
-<button class="btn btn-primary">Convert</button>
-</form>
-</div>
-
-<!-- PDF TO TEXT -->
 <div id="pdftotext" class="tool">
 <form method="POST" action="/pdftotext" enctype="multipart/form-data">
 <input type="file" name="pdf" class="form-control mb-2">
@@ -113,7 +79,6 @@ body {background:#f5f6fa;}
 {% if tool=="pdftotext" and result %}<pre>{{result}}</pre>{% endif %}
 </div>
 
-<!-- NOTES -->
 <div id="notes" class="tool">
 <form method="POST" action="/notes">
 <textarea name="content" class="form-control mb-2"></textarea>
@@ -122,7 +87,6 @@ body {background:#f5f6fa;}
 {% if tool=="notes" and result %}<pre>{{result}}</pre>{% endif %}
 </div>
 
-<!-- AI BIO -->
 <div id="aibio" class="tool">
 <form method="POST" action="/aibio">
 <input name="name" class="form-control mb-2" placeholder="Name">
@@ -133,7 +97,6 @@ body {background:#f5f6fa;}
 {% if tool=="aibio" and result %}<p>{{result}}</p>{% endif %}
 </div>
 
-<!-- RESUME -->
 <div id="resume" class="tool">
 <form method="POST" action="/resume">
 <input name="name" class="form-control mb-2" placeholder="Name">
