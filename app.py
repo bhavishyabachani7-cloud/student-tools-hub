@@ -2,13 +2,8 @@ from flask import Flask, render_template, request, send_file, Response
 from fpdf import FPDF
 import io
 import PyPDF2
-import logging
 
 app = Flask(__name__)
-
-# Reduce logs
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
 
 # ---------- HOME ----------
 @app.route('/', methods=['GET', 'HEAD'])
@@ -16,23 +11,6 @@ def home():
     if request.method == 'HEAD':
         return Response(status=200)
     return render_template('index.html', tool="bmi", result=None)
-
-# ---------- STATIC PAGES ----------
-@app.route('/about')
-def about():
-    return "<h1>About Page</h1>"
-
-@app.route('/contact')
-def contact():
-    return "<h1>Contact Page</h1>"
-
-@app.route('/privacy')
-def privacy():
-    return "<h1>Privacy Policy</h1>"
-
-@app.route('/terms')
-def terms():
-    return "<h1>Terms & Conditions</h1>"
 
 # ---------- BMI ----------
 @app.route('/bmi', methods=['POST'])
