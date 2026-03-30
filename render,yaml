@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: student-tools-hub
+    env: python
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
