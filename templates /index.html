@@ -1,122 +1,354 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Tools Hub</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum | Core Student Workspace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: linear-gradient(135deg, #09090e, #14142b);
+            --glass-card: rgba(22, 22, 43, 0.45);
+            --neon-accent: #00ffc8;
+            --purple-accent: #8a2be2;
+            --text-silver: #f1f5f9;
+            --text-dark-muted: #94a3b8;
+        }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-silver);
+            min-height: 100vh;
+        }
 
-<style>
-body {background:#f5f6fa;}
-.sidebar {
-    position:fixed;
-    width:200px;
-    height:100%;
-    background:#111;
-    color:white;
-    padding-top:20px;
-}
-.sidebar a {
-    display:block;
-    color:white;
-    padding:10px;
-    cursor:pointer;
-}
-.sidebar a:hover {background:#333;}
-.content {
-    margin-left:210px;
-    padding:20px;
-}
-.tool {display:none;}
-</style>
+        /* Glassmorphic Sidebar Navigation Frame */
+        .sidebar {
+            position: fixed;
+            width: 260px;
+            height: 100vh;
+            background: rgba(11, 11, 20, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px 15px;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            background: linear-gradient(45deg, var(--neon-accent), #00d2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-left: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-dark-muted);
+            padding: 14px 20px;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(0, 255, 200, 0.08);
+            color: var(--neon-accent);
+        }
+
+        .sidebar a.active {
+            border-left: 3px solid var(--neon-accent);
+        }
+
+        /* Central Working Grid Main Layout Canvas */
+        .content {
+            margin-left: 260px;
+            padding: 60px;
+            max-width: 1100px;
+        }
+
+        .tool-card {
+            display: none;
+            background: var(--glass-card);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            animation: paneEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes paneEntrance {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-weight: 700;
+            font-size: 26px;
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+
+        .tool-desc {
+            color: var(--text-dark-muted);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* Uniform Custom Input Controls styling */
+        .form-control {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: #ffffff !important;
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .form-control:focus {
+            border-color: rgba(0, 255, 200, 0.4) !important;
+            box-shadow: 0 0 15px rgba(0, 255, 200, 0.15) !important;
+        }
+
+        /* Interactive Action Trigger Buttons Styling */
+        .btn-premium {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, var(--neon-accent), #00c3ff);
+            color: #07070c;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 200, 0.3);
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 255, 200, 0.03);
+            border-left: 4px solid var(--neon-accent);
+            border-radius: 8px;
+        }
+
+        .badge-live {
+            background: rgba(0, 255, 200, 0.1);
+            color: var(--neon-accent);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
-
 <body>
 
 <div class="sidebar">
-<a onclick="show('bmi')">BMI</a>
-<a onclick="show('discount')">Discount</a>
-<a onclick="show('wordcount')">Words</a>
-<a onclick="show('pdftotext')">PDF→Text</a>
-<a onclick="show('notes')">Notes</a>
-<a onclick="show('aibio')">AI Bio</a>
-<a onclick="show('resume')">Resume</a>
+    <div class="sidebar-brand">
+        <i class="fa-solid fa-cube" style="color: var(--neon-accent)"></i> QUANTUM WORKSPACE
+    </div>
+    <a onclick="show('bmi')" id="link-bmi"><i class="fa-solid fa-heart-pulse"></i> BMI Calculator</a>
+    <a onclick="show('discount')" id="link-discount"><i class="fa-solid fa-tag"></i> Discount Tool</a>
+    <a onclick="show('wordcount')" id="link-wordcount"><i class="fa-solid fa-pen-nib"></i> Word Counter</a>
+    <a onclick="show('cgpa')" id="link-cgpa"><i class="fa-solid fa-graduation-cap"></i> CGPA Converter</a>
+    <a onclick="show('pdftotext')" id="link-pdftotext"><i class="fa-solid fa-file-pdf"></i> PDF Text Puller</a>
+    <a onclick="show('notes')" id="link-notes"><i class="fa-solid fa-list-check"></i> Notes CleanUp</a>
+    <a onclick="show('aibio')" id="link-aibio"><i class="fa-solid fa-robot"></i> Profile AI Bio</a>
+    <a onclick="show('resume')" id="link-resume"><i class="fa-solid fa-file-invoice"></i> Resume Generator</a>
 </div>
 
 <div class="content">
 
-<div id="bmi" class="tool" style="display:block;">
-<form method="POST" action="/bmi">
-<input name="weight" class="form-control mb-2" placeholder="Weight">
-<input name="height" class="form-control mb-2" placeholder="Height">
-<button class="btn btn-primary">Calculate</button>
-</form>
-{% if tool=="bmi" and result %}<p>{{result}}</p>{% endif %}
-</div>
+    <div id="bmi" class="tool-card" style="display:block;">
+        <span class="badge-live"><i class="fa-solid fa-bolt"></i> Realtime Client Computing</span>
+        <h2>BMI Calculator</h2>
+        <p class="tool-desc">Calculate body mass parameters dynamically without latency delays.</p>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <input type="number" id="bmi-w" class="form-control" placeholder="Weight (kg)" oninput="runBmi()">
+            </div>
+            <div class="col-md-6 mb-3">
+                <input type="number" id="bmi-h" class="form-control" placeholder="Height (cm)" oninput="runBmi()">
+            </div>
+        </div>
+        <div class="result-box d-none" id="bmi-box"></div>
+    </div>
 
-<div id="discount" class="tool">
-<form method="POST" action="/discount">
-<input name="price" class="form-control mb-2" placeholder="Price">
-<input name="discount" class="form-control mb-2" placeholder="Discount">
-<button class="btn btn-primary">Calculate</button>
-</form>
-{% if tool=="discount" and result %}<p>{{result}}</p>{% endif %}
-</div>
+    <div id="discount" class="tool-card">
+        <span class="badge-live"><i class="fa-solid fa-bolt"></i> Realtime Client Computing</span>
+        <h2>Discount Calculator</h2>
+        <p class="tool-desc">Instantly compute dynamic price margins and final sale amounts.</p>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <input type="number" id="disc-p" class="form-control" placeholder="Original Value (₹)" oninput="runDisc()">
+            </div>
+            <div class="col-md-6 mb-3">
+                <input type="number" id="disc-d" class="form-control" placeholder="Discount Value (%)" oninput="runDisc()">
+            </div>
+        </div>
+        <div class="result-box d-none" id="disc-box"></div>
+    </div>
 
-<div id="wordcount" class="tool">
-<form method="POST" action="/wordcount">
-<textarea name="text" class="form-control mb-2"></textarea>
-<button class="btn btn-primary">Count</button>
-</form>
-{% if tool=="wordcount" and result %}<p>{{result}}</p>{% endif %}
-</div>
+    <div id="wordcount" class="tool-card">
+        <span class="badge-live"><i class="fa-solid fa-clock"></i> Active Buffer Metrics</span>
+        <h2>Smart Document Word Counter</h2>
+        <p class="tool-desc">Evaluates data strings to track configuration density metrics as you type.</p>
+        <textarea id="word-area" class="form-control mb-3" rows="6" placeholder="Paste assignments string buffer here..." oninput="runWordCount()"></textarea>
+        <div class="row text-center">
+            <div class="col-4"><div class="p-3 border border-secondary rounded-3"><h4 id="v-words" class="m-0 text-info">0</h4><small class="text-muted">Words</small></div></div>
+            <div class="col-4"><div class="p-3 border border-secondary rounded-3"><h4 id="v-chars" class="m-0 text-info">0</h4><small class="text-muted">Characters</small></div></div>
+            <div class="col-4"><div class="p-3 border border-secondary rounded-3"><h4 id="v-lines" class="m-0 text-info">0</h4><small class="text-muted">Lines</small></div></div>
+        </div>
+    </div>
 
-<div id="pdftotext" class="tool">
-<form method="POST" action="/pdftotext" enctype="multipart/form-data">
-<input type="file" name="pdf" class="form-control mb-2">
-<button class="btn btn-primary">Convert</button>
-</form>
-{% if tool=="pdftotext" and result %}<pre>{{result}}</pre>{% endif %}
-</div>
+    <div id="cgpa" class="tool-card">
+        <span class="badge-live"><i class="fa-solid fa-bolt"></i> Realtime Client Computing</span>
+        <h2>CGPA to Percentage Converter</h2>
+        <p class="tool-desc">Translates linear grade point indexes directly into equivalent aggregate percentage structures.</p>
+        <input type="number" step="0.01" id="cgpa-in" class="form-control mb-3" placeholder="Enter standard CGPA index (e.g. 8.75)" oninput="runCgpa()">
+        <div class="result-box d-none" id="cgpa-box"></div>
+    </div>
 
-<div id="notes" class="tool">
-<form method="POST" action="/notes">
-<textarea name="content" class="form-control mb-2"></textarea>
-<button class="btn btn-primary">Format</button>
-</form>
-{% if tool=="notes" and result %}<pre>{{result}}</pre>{% endif %}
-</div>
+    <div id="pdftotext" class="tool-card">
+        <h2>PDF Text Puller Engine</h2>
+        <p class="tool-desc">Upload core vector files to strip and extract clean string blocks using server parsing.</p>
+        <form method="POST" action="/pdftotext" enctype="multipart/form-data">
+            <input type="file" name="pdf" class="form-control mb-3" accept=".pdf" required>
+            <button class="btn-premium">Process Document Stream</button>
+        </form>
+        {% if tool=="pdftotext" and result %}
+            <div class="result-box"><pre style="color: #fff; white-space: pre-wrap; margin:0; font-family: monospace;">{{result}}</pre></div>
+        {% endif %}
+    </div>
 
-<div id="aibio" class="tool">
-<form method="POST" action="/aibio">
-<input name="name" class="form-control mb-2" placeholder="Name">
-<input name="profession" class="form-control mb-2" placeholder="Profession">
-<input name="hobbies" class="form-control mb-2" placeholder="Hobbies">
-<button class="btn btn-primary">Generate</button>
-</form>
-{% if tool=="aibio" and result %}<p>{{result}}</p>{% endif %}
-</div>
+    <div id="notes" class="tool-card">
+        <h2>Notes CleanUp Formatter</h2>
+        <p class="tool-desc">Strips line arrays and formats lists into sequential numbered records.</p>
+        <form method="POST" action="/notes">
+            <textarea name="content" class="form-control mb-3" rows="5" placeholder="Enter messy structural items line by line..."></textarea>
+            <button class="btn-premium">Format System List</button>
+        </form>
+        {% if tool=="notes" and result %}
+            <div class="result-box"><pre style="color: var(--neon-accent); white-space: pre-wrap; margin:0; font-family: monospace;">{{result}}</pre></div>
+        {% endif %}
+    </div>
 
-<div id="resume" class="tool">
-<form method="POST" action="/resume">
-<input name="name" class="form-control mb-2" placeholder="Name">
-<input name="email" class="form-control mb-2" placeholder="Email">
-<input name="phone" class="form-control mb-2" placeholder="Phone">
-<textarea name="education" class="form-control mb-2"></textarea>
-<textarea name="experience" class="form-control mb-2"></textarea>
-<textarea name="skills" class="form-control mb-2"></textarea>
-<button class="btn btn-primary">Download</button>
-</form>
-</div>
+    <div id="aibio" class="tool-card">
+        <h2>AI Profile Biography Generator</h2>
+        <p class="tool-desc">Creates descriptive professional introductory text blocks automatically.</p>
+        <form method="POST" action="/aibio">
+            <input name="name" class="form-control mb-3" placeholder="Target Identifier Name" required>
+            <input name="profession" class="form-control mb-3" placeholder="Core Domain Domain/Studies" required>
+            <input name="hobbies" class="form-control mb-3" placeholder="Key Hobbies/Interest Passions" required>
+            <button class="btn-premium">Compile Professional Bio Block</button>
+        </form>
+        {% if tool=="aibio" and result %}
+            <div class="result-box" style="border-left-color: var(--purple-accent);">{{result}}</div>
+        {% endif %}
+    </div>
+
+    <div id="resume" class="tool-card">
+        <h2>Resume Constructor Engine</h2>
+        <p class="tool-desc">Compiles form tracking blocks down into clean layout PDF structures ready for applications.</p>
+        <form method="POST" action="/resume">
+            <div class="row">
+                <div class="col-md-4 mb-3"><input name="name" class="form-control" placeholder="Full Name" required></div>
+                <div class="col-md-4 mb-3"><input name="email" class="form-control" placeholder="Contact Email" required></div>
+                <div class="col-md-4 mb-3"><input name="phone" class="form-control" placeholder="Contact Phone" required></div>
+            </div>
+            <textarea name="education" class="form-control mb-3" rows="3" placeholder="Education Details..."></textarea>
+            <textarea name="experience" class="form-control mb-3" rows="3" placeholder="Experience Track Record..."></textarea>
+            <textarea name="skills" class="form-control mb-3" placeholder="Core Skills (Separated by commas)"></textarea>
+            <button class="btn-premium">Generate Executive PDF</button>
+        </form>
+    </div>
 
 </div>
 
 <script>
 function show(id){
-document.querySelectorAll('.tool').forEach(t=>t.style.display='none');
-document.getElementById(id).style.display='block';
+    document.querySelectorAll('.tool-card').forEach(card => card.style.display='none');
+    document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+    
+    const panel = document.getElementById(id);
+    if(panel) {
+        panel.style.display = 'block';
+        const sidebarLink = document.getElementById('link-' + id);
+        if(sidebarLink) sidebarLink.classList.add('active');
+        localStorage.setItem('quantum_active_module', id);
+    }
+}
+
+// Client Calculations Engine Logic
+function runBmi() {
+    let w = parseFloat(document.getElementById('bmi-w').value);
+    let h = parseFloat(document.getElementById('bmi-h').value);
+    let box = document.getElementById('bmi-box');
+    if(w && h) {
+        let score = (w / ((h / 100) ** 2)).toFixed(2);
+        let category = score < 18.5 ? "Underweight Status" : score < 25 ? "Normal Metrics" : "Overweight Profile";
+        box.innerHTML = `<strong>Calculated Result:</strong> ${score} Metric Profile Index (${category})`;
+        box.classList.remove('d-none');
+    } else { box.classList.add('d-none'); }
+}
+
+function runDisc() {
+    let p = parseFloat(document.getElementById('disc-p').value);
+    let d = parseFloat(document.getElementById('disc-d').value);
+    let box = document.getElementById('disc-box');
+    if(p && !isNaN(d)) {
+        let net = (p - (p * d / 100)).toFixed(2);
+        box.innerHTML = `<strong>Final Total Price:</strong> ₹${net} &nbsp;|&nbsp; <span style='color: var(--neon-accent);'>Total Saved: ₹${(p - net).toFixed(2)}</span>`;
+        box.classList.remove('d-none');
+    } else { box.classList.add('d-none'); }
+}
+
+function runWordCount() {
+    let txt = document.getElementById('word-area').value;
+    document.getElementById('v-words').innerText = txt.trim() === "" ? 0 : txt.trim().split(/\s+/).length;
+    document.getElementById('v-chars').innerText = txt.length;
+    document.getElementById('v-lines').innerText = txt.trim() === "" ? 0 : txt.split('\n').length;
+}
+
+function runCgpa() {
+    let val = parseFloat(document.getElementById('cgpa-in').value);
+    let box = document.getElementById('cgpa-box');
+    if(val && val <= 10) {
+        box.innerHTML = `<strong>Calculated Percentage Conversion:</strong> ${(val * 9.5).toFixed(2)}%`;
+        box.classList.remove('d-none');
+    } else { box.classList.add('d-none'); }
+}
+
+// Ensure context state persistence across manual full form reloads
+window.onload = function() {
+    let state = "{{ tool if tool else '' }}";
+    if(!state) {
+        state = localStorage.getItem('quantum_active_module') || 'bmi';
+    }
+    show(state);
 }
 </script>
-
 </body>
 </html>
