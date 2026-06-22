@@ -3,255 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum | Core Student Workspace</title>
+    <title>Quantum Suite | Advanced Student Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        :root {
-            --bg-main: linear-gradient(135deg, #09090e, #14142b);
-            --glass-card: rgba(22, 22, 43, 0.45);
-            --neon-accent: #00ffc8;
-            --purple-accent: #8a2be2;
-            --text-silver: #f1f5f9;
-            --text-dark-muted: #94a3b8;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-main);
-            color: var(--text-silver);
-            min-height: 100vh;
-        }
-
-        /* Glassmorphic Sidebar Navigation Frame */
-        .sidebar {
-            position: fixed;
-            width: 260px;
-            height: 100vh;
-            background: rgba(11, 11, 20, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 30px 15px;
-            z-index: 100;
-        }
-
-        .sidebar-brand {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            background: linear-gradient(45deg, var(--neon-accent), #00d2ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            padding-left: 15px;
-            margin-bottom: 40px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-dark-muted);
-            padding: 14px 20px;
-            text-decoration: none;
-            cursor: pointer;
-            border-radius: 12px;
-            margin-bottom: 6px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .sidebar a:hover, .sidebar a.active {
-            background: rgba(0, 255, 200, 0.08);
-            color: var(--neon-accent);
-        }
-
-        .sidebar a.active {
-            border-left: 3px solid var(--neon-accent);
-        }
-
-        /* Central Working Grid Main Layout Canvas */
-        .content {
-            margin-left: 260px;
-            padding: 60px;
-            max-width: 1100px;
-        }
-
-        .tool-card {
-            display: none;
-            background: var(--glass-card);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 40px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-            animation: paneEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes paneEntrance {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            font-weight: 700;
-            font-size: 26px;
-            margin-bottom: 6px;
-            color: #ffffff;
-        }
-
-        .tool-desc {
-            color: var(--text-dark-muted);
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        /* Uniform Custom Input Controls styling */
-        .form-control {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            color: #ffffff !important;
-            border-radius: 12px;
-            padding: 14px;
-        }
-
-        .form-control:focus {
-            border-color: rgba(0, 255, 200, 0.4) !important;
-            box-shadow: 0 0 15px rgba(0, 255, 200, 0.15) !important;
-        }
-
-        /* Interactive Action Trigger Buttons Styling */
-        .btn-premium {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(135deg, var(--neon-accent), #00c3ff);
-            color: #07070c;
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-
-        .btn-premium:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 200, 0.3);
-        }
-
-        .result-box {
-            margin-top: 25px;
-            padding: 20px;
-            background: rgba(0, 255, 200, 0.03);
-            border-left: 4px solid var(--neon-accent);
-            border-radius: 8px;
-        }
-
-        .badge-live {
-            background: rgba(0, 255, 200, 0.1);
-            color: var(--neon-accent);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
 <div class="sidebar">
     <div class="sidebar-brand">
-        <i class="fa-solid fa-cube" style="color: var(--neon-accent)"></i> QUANTUM WORKSPACE
+        <i class="fa-solid fa-terminal" style="color: var(--neon-accent)"></i> QUANTUM HUB
     </div>
-    <a onclick="show('bmi')" id="link-bmi"><i class="fa-solid fa-heart-pulse"></i> BMI Calculator</a>
-    <a onclick="show('discount')" id="link-discount"><i class="fa-solid fa-tag"></i> Discount Tool</a>
-    <a onclick="show('wordcount')" id="link-wordcount"><i class="fa-solid fa-pen-nib"></i> Word Counter</a>
-    <a onclick="show('cgpa')" id="link-cgpa"><i class="fa-solid fa-graduation-cap"></i> CGPA Converter</a>
-    <a onclick="show('pdftotext')" id="link-pdftotext"><i class="fa-solid fa-file-pdf"></i> PDF Text Puller</a>
-    <a onclick="show('notes')" id="link-notes"><i class="fa-solid fa-list-check"></i> Notes CleanUp</a>
+    <a onclick="show('bmi')" id="link-bmi"><i class="fa-solid fa-heart-pulse"></i> BMI Diagnostic</a>
+    <a onclick="show('discount')" id="link-discount"><i class="fa-solid fa-percent"></i> Pricing Margin</a>
+    <a onclick="show('wordcount')" id="link-wordcount"><i class="fa-solid fa-chart-simple"></i> Text Metrics</a>
+    <a onclick="show('cgpa')" id="link-cgpa"><i class="fa-solid fa-graduation-cap"></i> Grade Translator</a>
+    <a onclick="show('flashcards')" id="link-flashcards"><i class="fa-solid fa-layer-group"></i> Flashcard Arena</a>
+    <a onclick="show('pomodoro')" id="link-pomodoro"><i class="fa-solid fa-stopwatch"></i> Study Pomodoro</a>
+    <a onclick="show('captiongen')" id="link-captiongen"><i class="fa-solid fa-hashtag"></i> AI Hook Creator</a>
+    <a onclick="show('deadlines')" id="link-deadlines"><i class="fa-solid fa-calendar-check"></i> Deadline Matrix</a>
+    <a onclick="show('tts')" id="link-tts"><i class="fa-solid fa-volume-high"></i> Note Audio Player</a>
+    <a onclick="show('pdftotext')" id="link-pdftotext"><i class="fa-solid fa-file-pdf"></i> PDF Extract</a>
+    <a onclick="show('notes')" id="link-notes"><i class="fa-solid fa-wand-magic-sparkles"></i> Note CleanUp</a>
     <a onclick="show('aibio')" id="link-aibio"><i class="fa-solid fa-robot"></i> Profile AI Bio</a>
-    <a onclick="show('resume')" id="link-resume"><i class="fa-solid fa-file-invoice"></i> Resume Generator</a>
+    <a onclick="show('resume')" id="link-resume"><i class="fa-solid fa-id-card"></i> Multi-Resume</a>
 </div>
 
 <div class="content">
 
     <div id="bmi" class="tool-card" style="display:block;">
-        <span class="badge-live"><i class="fa-solid fa-bolt"></i> Realtime Client Computing</span>
-        <h2>BMI Calculator</h2>
-        <p class="tool-desc">Calculate body mass parameters dynamically without latency delays.</p>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <input type="number" id="bmi-w" class="form-control" placeholder="Weight (kg)" oninput="runBmi()">
+        <span class="badge-live"><i class="fa-solid fa-circle-nodes"></i> Diagnostic View</span>
+        <h2>Body Mass Parameter Tracker</h2>
+        <p class="tool-desc">Real-time physiological metrics processing.</p>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-5">
+                <label class="form-label text-muted small">Mass Weight (KG)</label>
+                <input type="number" id="bmi-w" class="form-control mb-3" placeholder="e.g. 70" oninput="runBmi()">
+                <label class="form-label text-muted small">Vertical Height (CM)</label>
+                <input type="number" id="bmi-h" class="form-control" placeholder="e.g. 175" oninput="runBmi()">
             </div>
-            <div class="col-md-6 mb-3">
-                <input type="number" id="bmi-h" class="form-control" placeholder="Height (cm)" oninput="runBmi()">
+            <div class="col-lg-7">
+                <div class="inner-display d-flex flex-column justify-content-center align-items-center text-center p-4">
+                    <div id="bmi-metric-readout" class="metric-value mb-2">0.0</div>
+                    <div id="bmi-status-msg" class="text-muted small">Enter configurations to begin...</div>
+                </div>
             </div>
         </div>
-        <div class="result-box d-none" id="bmi-box"></div>
     </div>
 
     <div id="discount" class="tool-card">
-        <span class="badge-live"><i class="fa-solid fa-bolt"></i> Realtime Client Computing</span>
-        <h2>Discount Calculator</h2>
-        <p class="tool-desc">Instantly compute dynamic price margins and final sale amounts.</p>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <input type="number" id="disc-p" class="form-control" placeholder="Original Value (₹)" oninput="runDisc()">
+        <span class="badge-live"><i class="fa-solid fa-money-bill-wave"></i> Financial Layer</span>
+        <h2>Pricing & Margin Calculator</h2>
+        <p class="tool-desc">Evaluates final purchase point metrics and saved volumes.</p>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-5">
+                <label class="form-label text-muted small">Base Value (₹)</label>
+                <input type="number" id="disc-p" class="form-control mb-3" placeholder="1000" oninput="runDisc()">
+                <label class="form-label text-muted small">Discount Rate (%)</label>
+                <input type="number" id="disc-d" class="form-control" placeholder="15" oninput="runDisc()">
             </div>
-            <div class="col-md-6 mb-3">
-                <input type="number" id="disc-d" class="form-control" placeholder="Discount Value (%)" oninput="runDisc()">
+            <div class="col-lg-7">
+                <div class="inner-display p-4">
+                    <div class="d-flex justify-content-between mb-2"><span>Original Cost:</span><span id="lbl-orig">₹0.00</span></div>
+                    <div class="d-flex justify-content-between mb-2"><span>Deduction Total:</span><span id="lbl-saved" style="color: var(--neon-accent);">₹0.00</span></div>
+                    <hr style="border-color: rgba(255,255,255,0.1)">
+                    <div class="d-flex justify-content-between align-items-center"><span class="h6 m-0">Net Liability:</span><span class="h4 m-0 text-white" id="lbl-net">₹0.00</span></div>
+                </div>
             </div>
         </div>
-        <div class="result-box d-none" id="disc-box"></div>
     </div>
 
     <div id="wordcount" class="tool-card">
-        <span class="badge-live"><i class="fa-solid fa-clock"></i> Active Buffer Metrics</span>
-        <h2>Smart Document Word Counter</h2>
-        <p class="tool-desc">Evaluates data strings to track configuration density metrics as you type.</p>
-        <textarea id="word-area" class="form-control mb-3" rows="6" placeholder="Paste assignments string buffer here..." oninput="runWordCount()"></textarea>
-        <div class="row text-center">
-            <div class="col-4"><div class="p-3 border border-secondary rounded-3"><h4 id="v-words" class="m-0 text-info">0</h4><small class="text-muted">Words</small></div></div>
-            <div class="col-4"><div class="p-3 border border-secondary rounded-3"><h4 id="v-chars" class="m-0 text-info">0</h4><small class="text-muted">Characters</small></div></div>
-            <div class="col-4"><div class="p-3 border border-secondary rounded-3"><h4 id="v-lines" class="m-0 text-info">0</h4><small class="text-muted">Lines</small></div></div>
+        <span class="badge-live"><i class="fa-solid fa-gauge-high"></i> Vector Length Analytics</span>
+        <h2>Text & Word Metrics Hub</h2>
+        <p class="tool-desc">Live documentation density parameters analyzer.</p>
+        <textarea id="word-area" class="form-control mb-4" rows="5" placeholder="Paste assignments buffer context here..." oninput="runWordCount()"></textarea>
+        <div class="row text-center g-3">
+            <div class="col-4"><div class="inner-display p-3"><h3 id="v-words" class="text-white m-0">0</h3><small class="text-muted text-uppercase font-monospace" style="font-size:10px;">Words</small></div></div>
+            <div class="col-4"><div class="inner-display p-3"><h3 id="v-chars" class="text-white m-0">0</h3><small class="text-muted text-uppercase font-monospace" style="font-size:10px;">Characters</small></div></div>
+            <div class="col-4"><div class="inner-display p-3"><h3 id="v-lines" class="text-white m-0">0</h3><small class="text-muted text-uppercase font-monospace" style="font-size:10px;">Lines</small></div></div>
         </div>
     </div>
 
     <div id="cgpa" class="tool-card">
-        <span class="badge-live"><i class="fa-solid fa-bolt"></i> Realtime Client Computing</span>
+        <span class="badge-live"><i class="fa-solid fa-calculator"></i> Academic Matrix</span>
         <h2>CGPA to Percentage Converter</h2>
-        <p class="tool-desc">Translates linear grade point indexes directly into equivalent aggregate percentage structures.</p>
-        <input type="number" step="0.01" id="cgpa-in" class="form-control mb-3" placeholder="Enter standard CGPA index (e.g. 8.75)" oninput="runCgpa()">
-        <div class="result-box d-none" id="cgpa-box"></div>
+        <p class="tool-desc">Standardized university index translation layer.</p>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-5">
+                <label class="form-label text-muted small">CGPA Input (Scale 10.0)</label>
+                <input type="number" step="0.01" max="10" id="cgpa-in" class="form-control" placeholder="e.g. 8.5" oninput="runCgpa()">
+            </div>
+            <div class="col-lg-7">
+                <div class="inner-display d-flex flex-column justify-content-center align-items-center p-4 text-center">
+                    <div id="cgpa-out" class="metric-value" style="color: #a855f7;">0.0%</div>
+                    <div class="text-muted small mt-1">Aggregated Core Weight Percentage</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="flashcards" class="tool-card">
+        <h2>Interactive Flashcard Deck Arena</h2>
+        <p class="tool-desc">Convert standard strings into quiz frames to optimize study retention profiles.</p>
+        <div class="row g-4">
+            <div class="col-md-5">
+                <textarea id="fc-input" class="form-control mb-3" rows="6" placeholder="Question // Answer&#10;Example Question 1 // Correct Answer 1&#10;Example Question 2 // Correct Answer 2"></textarea>
+                <button class="btn-premium w-100" onclick="compileFlashcards()">Compile Active Deck</button>
+            </div>
+            <div class="col-md-7 d-flex justify-content-center align-items-center">
+                <div class="flashcard-frame" onclick="this.classList.toggle('flipped')">
+                    <div class="fc-front" id="fc-front-view">No active deck compiled.</div>
+                    <div class="fc-back" id="fc-back-view">Click compile button.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pomodoro" class="tool-card">
+        <h2>Focus Pomodoro Matrix</h2>
+        <p class="tool-desc">Maximize workspace time allocations using native localized timer ticks.</p>
+        <div class="inner-display text-center p-5 mx-auto" style="max-width: 600px;">
+            <div class="metric-value font-monospace mb-4" id="pomo-clock" style="font-size: 64px; color: var(--neon-accent);">25:00</div>
+            <div class="d-flex justify-content-center gap-3">
+                <button class="btn btn-outline-success btn-sm px-4" onclick="togglePomo()">Start / Pause</button>
+                <button class="btn btn-outline-danger btn-sm px-4" onclick="resetPomo()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="captiongen" class="tool-card">
+        <h2>AI Hook & Caption Generator</h2>
+        <p class="tool-desc">Generate optimized post copy across distinct communication tones.</p>
+        <form method="POST" action="/captiongen">
+            <input name="topic" class="form-control mb-3" placeholder="What is your core topic or project subject?" required>
+            <select name="tone" class="form-control mb-3" style="background:#1e1e38; color:white;">
+                <option value="professional">💼 Professional LinkedIn Style Portfolio Hook</option>
+                <option value="trendy">🔥 Aesthetic High-Engagement Instagram Trend Style</option>
+                <option value="academic">🎓 Analytical Structural Research Style</option>
+            </select>
+            <button class="btn-premium">Generate Portfolio Copy Assets</button>
+        </form>
+        {% if tool=="captiongen" and result %}
+            <div class="inner-display mt-3 text-white">
+                <p id="caption-text" style="white-space: pre-wrap; margin-bottom: 15px;">{{result}}</p>
+                <button class="btn btn-outline-info btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('caption-text').innerText); alert('Copied to clipboard!');">
+                    <i class="fa-regular fa-copy"></i> Copy Content String
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <div id="deadlines" class="tool-card">
+        <span class="badge-live"><i class="fa-solid fa-floppy-disk"></i> Saves Locally</span>
+        <h2>Assignment Timeline Tracker</h2>
+        <p class="tool-desc">Log critical milestones. Your pipeline maps persist safely on your device browser storage.</p>
+        <div class="row g-3 mb-4">
+            <div class="col-md-8"><input type="text" id="task-name" class="form-control" placeholder="Target Task Metric Description..."></div>
+            <div class="col-md-4"><button class="btn-premium" onclick="addTask()">Commit Track</button></div>
+        </div>
+        <div class="inner-display p-3" style="min-height: auto;">
+            <ul id="task-list" class="list-unstyled m-0" style="max-height: 250px; overflow-y: auto;"></ul>
+        </div>
+    </div>
+
+    <div id="tts" class="tool-card">
+        <span class="badge-live"><i class="fa-solid fa-bolt"></i> Local Audio Stream</span>
+        <h2>Note Audio Revision Player</h2>
+        <p class="tool-desc">Parse text documents directly to internal synthesis streams for immediate revision playbacks.</p>
+        <textarea id="tts-text" class="form-control mb-3" rows="4" placeholder="Paste structural review text blocks or study items here..."></textarea>
+        <div class="d-flex gap-3">
+            <button class="btn-premium" onclick="playAudio()"><i class="fa-solid fa-play"></i> Run Audio Track</button>
+            <button class="btn btn-outline-danger px-4" style="border-radius:12px;" onclick="window.speechSynthesis.cancel();"><i class="fa-solid fa-stop"></i> Stop</button>
+        </div>
     </div>
 
     <div id="pdftotext" class="tool-card">
         <h2>PDF Text Puller Engine</h2>
-        <p class="tool-desc">Upload core vector files to strip and extract clean string blocks using server parsing.</p>
+        <p class="tool-desc">Extract raw text matrices from data sheets via server stream decoding.</p>
         <form method="POST" action="/pdftotext" enctype="multipart/form-data">
             <input type="file" name="pdf" class="form-control mb-3" accept=".pdf" required>
             <button class="btn-premium">Process Document Stream</button>
         </form>
         {% if tool=="pdftotext" and result %}
-            <div class="result-box"><pre style="color: #fff; white-space: pre-wrap; margin:0; font-family: monospace;">{{result}}</pre></div>
+            <div class="inner-display mt-3"><pre style="color: #fff; white-space: pre-wrap; margin:0; font-size:12px; font-family: monospace;">{{result}}</pre></div>
         {% endif %}
     </div>
 
     <div id="notes" class="tool-card">
         <h2>Notes CleanUp Formatter</h2>
-        <p class="tool-desc">Strips line arrays and formats lists into sequential numbered records.</p>
+        <p class="tool-desc">Strips raw text buffers to construct clear, indexed bullet items.</p>
         <form method="POST" action="/notes">
-            <textarea name="content" class="form-control mb-3" rows="5" placeholder="Enter messy structural items line by line..."></textarea>
+            <textarea name="content" class="form-control mb-3" rows="5" placeholder="Enter list metrics line by line..."></textarea>
             <button class="btn-premium">Format System List</button>
         </form>
         {% if tool=="notes" and result %}
-            <div class="result-box"><pre style="color: var(--neon-accent); white-space: pre-wrap; margin:0; font-family: monospace;">{{result}}</pre></div>
+            <div class="inner-display mt-3"><pre style="color: var(--neon-accent); white-space: pre-wrap; margin:0; font-family: monospace;">{{result}}</pre></div>
         {% endif %}
     </div>
 
@@ -265,23 +212,36 @@
             <button class="btn-premium">Compile Professional Bio Block</button>
         </form>
         {% if tool=="aibio" and result %}
-            <div class="result-box" style="border-left-color: var(--purple-accent);">{{result}}</div>
+            <div class="inner-display mt-3" style="border-left: 3px solid var(--purple-accent); padding-left: 15px; color: white;">{{result}}</div>
         {% endif %}
     </div>
 
     <div id="resume" class="tool-card">
-        <h2>Resume Constructor Engine</h2>
-        <p class="tool-desc">Compiles form tracking blocks down into clean layout PDF structures ready for applications.</p>
+        <h2>ATS Multi-Template Document Constructor</h2>
+        <p class="tool-desc">Select premium layout systems to compile structured typographic assets.</p>
         <form method="POST" action="/resume">
             <div class="row">
-                <div class="col-md-4 mb-3"><input name="name" class="form-control" placeholder="Full Name" required></div>
-                <div class="col-md-4 mb-3"><input name="email" class="form-control" placeholder="Contact Email" required></div>
-                <div class="col-md-4 mb-3"><input name="phone" class="form-control" placeholder="Contact Phone" required></div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted small">Select Layout Theme Model</label>
+                    <select name="template_id" class="form-control" style="background:#1e1e38; color:white;">
+                        <option value="minimal">1. Corporate Minimalist (Single Column Slate)</option>
+                        <option value="modern">2. Creative Neon Accent (Split Left Accent Bar Layout)</option>
+                        <option value="executive">3. Executive Management (Bold Deep Header Grid Block)</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted small">Full Legal Name</label>
+                    <input name="name" class="form-control" placeholder="Candidate Identifier" required>
+                </div>
             </div>
-            <textarea name="education" class="form-control mb-3" rows="3" placeholder="Education Details..."></textarea>
-            <textarea name="experience" class="form-control mb-3" rows="3" placeholder="Experience Track Record..."></textarea>
-            <textarea name="skills" class="form-control mb-3" placeholder="Core Skills (Separated by commas)"></textarea>
-            <button class="btn-premium">Generate Executive PDF</button>
+            <div class="row">
+                <div class="col-md-6 mb-3"><input name="email" class="form-control" placeholder="Email Reference Target" required></div>
+                <div class="col-md-6 mb-3"><input name="phone" class="form-control" placeholder="Contact Core Link" required></div>
+            </div>
+            <textarea name="education" class="form-control mb-3" rows="3" placeholder="Educational Qualifications & Institutions..."></textarea>
+            <textarea name="experience" class="form-control mb-3" rows="3" placeholder="Professional Milestones & Operational Track..."></textarea>
+            <textarea name="skills" class="form-control mb-3" placeholder="Core Knowledge Domain Skills (Comma separated)"></textarea>
+            <button class="btn-premium">Compile Layout Artifact</button>
         </form>
     </div>
 
@@ -301,28 +261,26 @@ function show(id){
     }
 }
 
-// Client Calculations Engine Logic
+// Inline Calculation Engine Units
 function runBmi() {
     let w = parseFloat(document.getElementById('bmi-w').value);
     let h = parseFloat(document.getElementById('bmi-h').value);
-    let box = document.getElementById('bmi-box');
+    let out = document.getElementById('bmi-metric-readout');
+    let msg = document.getElementById('bmi-status-msg');
     if(w && h) {
-        let score = (w / ((h / 100) ** 2)).toFixed(2);
-        let category = score < 18.5 ? "Underweight Status" : score < 25 ? "Normal Metrics" : "Overweight Profile";
-        box.innerHTML = `<strong>Calculated Result:</strong> ${score} Metric Profile Index (${category})`;
-        box.classList.remove('d-none');
-    } else { box.classList.add('d-none'); }
+        let val = (w / ((h / 100) ** 2)).toFixed(1);
+        out.innerText = val;
+        msg.innerText = val < 18.5 ? "Underweight Category Profile" : val < 25 ? "Optimal Metric Performance" : "Overweight Target Bounds";
+    }
 }
 
 function runDisc() {
-    let p = parseFloat(document.getElementById('disc-p').value);
-    let d = parseFloat(document.getElementById('disc-d').value);
-    let box = document.getElementById('disc-box');
-    if(p && !isNaN(d)) {
-        let net = (p - (p * d / 100)).toFixed(2);
-        box.innerHTML = `<strong>Final Total Price:</strong> ₹${net} &nbsp;|&nbsp; <span style='color: var(--neon-accent);'>Total Saved: ₹${(p - net).toFixed(2)}</span>`;
-        box.classList.remove('d-none');
-    } else { box.classList.add('d-none'); }
+    let p = parseFloat(document.getElementById('disc-p').value) || 0;
+    let d = parseFloat(document.getElementById('disc-d').value) || 0;
+    let net = p - (p * d / 100);
+    document.getElementById('lbl-orig').innerText = "₹" + p.toFixed(2);
+    document.getElementById('lbl-saved').innerText = "₹" + (p - net).toFixed(2);
+    document.getElementById('lbl-net').innerText = "₹" + net.toFixed(2);
 }
 
 function runWordCount() {
@@ -334,20 +292,89 @@ function runWordCount() {
 
 function runCgpa() {
     let val = parseFloat(document.getElementById('cgpa-in').value);
-    let box = document.getElementById('cgpa-box');
-    if(val && val <= 10) {
-        box.innerHTML = `<strong>Calculated Percentage Conversion:</strong> ${(val * 9.5).toFixed(2)}%`;
-        box.classList.remove('d-none');
-    } else { box.classList.add('d-none'); }
+    let out = document.getElementById('cgpa-out');
+    if(val && val <= 10) { out.innerText = (val * 9.5).toFixed(1) + "%"; } else { out.innerText = "0.0%"; }
 }
 
-// Ensure context state persistence across manual full form reloads
+// Flashcards Handler Block
+let activeDeck = [];
+let fcIndex = 0;
+function compileFlashcards() {
+    let raw = document.getElementById('fc-input').value.split('\n');
+    activeDeck = [];
+    raw.forEach(line => {
+        if(line.includes('//')) {
+            let parts = line.split('//');
+            activeDeck.push({ q: parts[0].trim(), a: parts[1].trim() });
+        }
+    });
+    if(activeDeck.length > 0) { fcIndex = 0; loadCard(); }
+}
+function loadCard() {
+    document.getElementById('fc-front-view').innerText = activeDeck[fcIndex].q;
+    document.getElementById('fc-back-view').innerText = activeDeck[fcIndex].a;
+}
+
+// Focus Pomodoro Timer Loop Tracker
+let pomoTimer = null;
+let pomoSeconds = 1500;
+function togglePomo() {
+    if(pomoTimer) { clearInterval(pomoTimer); pomoTimer = null; } 
+    else {
+        pomoTimer = setInterval(() => {
+            if(pomoSeconds > 0) {
+                pomoSeconds--;
+                let m = Math.floor(pomoSeconds / 60).toString().padStart(2, '0');
+                let s = (pomoSeconds % 60).toString().padStart(2, '0');
+                document.getElementById('pomo-clock').innerText = `${m}:${s}`;
+            } else { clearInterval(pomoTimer); alert("Focus block iteration complete."); }
+        }, 1000);
+    }
+}
+function resetPomo() {
+    clearInterval(pomoTimer); pomoTimer = null; pomoSeconds = 1500;
+    document.getElementById('pomo-clock').innerText = "25:00";
+}
+
+// Deadline Local Data Storage Mapping Arrays
+function loadTasks() {
+    let list = document.getElementById('task-list'); list.innerHTML = "";
+    let data = JSON.parse(localStorage.getItem('quantum_tasks') || "[]");
+    if(data.length === 0) {
+        list.innerHTML = "<li class='text-muted text-center py-2 small'>No pending tracking assignments.</li>"; return;
+    }
+    data.forEach((task, index) => {
+        list.innerHTML += `
+            <li class="d-flex justify-content-between align-items-center mb-2 p-2 border-bottom border-secondary rounded" style="background: rgba(255,255,255,0.01)">
+                <span class="text-white small">${task}</span>
+                <button class="btn btn-sm text-danger m-0 p-1" onclick="deleteTask(${index})"><i class="fa-solid fa-trash-can"></i></button>
+            </li>`;
+    });
+}
+function addTask() {
+    let inp = document.getElementById('task-name'); if(!inp.value.trim()) return;
+    let data = JSON.parse(localStorage.getItem('quantum_tasks') || "[]");
+    data.push(inp.value.trim()); localStorage.setItem('quantum_tasks', JSON.stringify(data));
+    inp.value = ""; loadTasks();
+}
+function deleteTask(index) {
+    let data = JSON.parse(localStorage.getItem('quantum_tasks') || "[]");
+    data.splice(index, 1); localStorage.setItem('quantum_tasks', JSON.stringify(data));
+    loadTasks();
+}
+
+// Speech Synthesis Interface Player
+function playAudio() {
+    let str = document.getElementById('tts-text').value; if(!str.trim()) return alert("Buffer content is empty.");
+    window.speechSynthesis.cancel();
+    let speechTrack = new SpeechSynthesisUtterance(str); speechTrack.rate = 1.0;
+    window.speechSynthesis.speak(speechTrack);
+}
+
 window.onload = function() {
     let state = "{{ tool if tool else '' }}";
-    if(!state) {
-        state = localStorage.getItem('quantum_active_module') || 'bmi';
-    }
-    show(state);
+    if(!state) { state = localStorage.getItem('quantum_active_module') || 'bmi'; }
+    show(state); loadTasks();
 }
 </script>
 </body>
